@@ -43,10 +43,15 @@
             android:layout_marginStart="10dp"
             android:background="@drawable/button_drawable"/>
     </LinearLayout>
+
     <ImageView
-        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="367dp"
+        android:src="@drawable/worldmap" />
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/worldmap"/>
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/explore"/>
 
 </LinearLayout>

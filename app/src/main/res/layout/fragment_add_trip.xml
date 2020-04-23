@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Fragments.AddTripFragment"
-    android:gravity="center">
+    android:gravity="center"
+    android:layout_marginTop="20dp">
 
 
     <EditText
@@ -70,12 +71,11 @@
     </LinearLayout>
 
     <Button
-        android:background="@drawable/button_drawable"
+        android:id="@+id/addTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Trip"
         android:layout_margin="10dp"
-        android:gravity="center_vertical"
-        android:id="@+id/addTrip"/>
+        android:background="@drawable/button_drawable"
+        android:text="Add Trip" />
 
 </LinearLayout>

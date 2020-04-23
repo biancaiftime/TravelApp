@@ -1,39 +1,31 @@
 package com.example.proiecttandroid.Activities;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
-import android.os.Bundle;
-import android.view.View;
-
-import com.example.proiecttandroid.Fragments.AddTripFragment;
-import com.example.proiecttandroid.Fragments.TripsFragment;
-import com.example.proiecttandroid.Models.Trip;
-import com.example.proiecttandroid.R;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class TripsActivity extends AppCompatActivity {
+import android.os.Bundle;
 
-    private AddTripFragment addTripFragment = new AddTripFragment();
-    private TripsFragment tripsFragment = new TripsFragment();
+import com.example.proiecttandroid.Fragments.ArticlesFragment;
+import com.example.proiecttandroid.Fragments.CitiesFragment;
+import com.example.proiecttandroid.R;
 
+public class CategoriesActivity extends AppCompatActivity {
+
+    private CitiesFragment citiesFragment = new CitiesFragment();
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trips);
-        addFragment(tripsFragment);
-        addFragment(addTripFragment);
+        setContentView(R.layout.activity_categories);
+        addFragment(citiesFragment);
     }
 
     public  void addFragment(Fragment fragment)
     {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.FragmentManager,fragment);
+        fragmentTransaction.add(R.id.FragmentManagerCity,fragment);
         //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -41,12 +33,8 @@ public class TripsActivity extends AppCompatActivity {
     {
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.FragmentManager, fragment);
+        fragmentTransaction.replace(R.id.FragmentManagerCity, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }
-    public void addItem(Trip trip)
-    {
-        tripsFragment.addItem(trip);
     }
 }

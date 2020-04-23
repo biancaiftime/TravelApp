@@ -19,6 +19,7 @@ public class HomeActivity extends AppCompatActivity {
     private Button btnCategories;
     private Button btnGallery;
     private Button btnTrips;
+    private  TextView explore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +37,9 @@ public class HomeActivity extends AppCompatActivity {
         title.setTextColor(Color.parseColor("#F97C3C"));
         title.getPaint().setShader(textShader);
 
+        explore = findViewById(R.id.explore);
+        explore.setText("Explore the world via Google Maps as we can't travel right now.");
+
         btnCategories = findViewById(R.id.btnCategory);
         btnGallery = findViewById(R.id.btnGallery);
         btnTrips = findViewById(R.id.btnTrips);
@@ -51,6 +55,21 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(HomeActivity.this, TripsActivity.class);
+                HomeActivity.this.startActivity(myIntent);
+            }
+        });
+        btnCategories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(HomeActivity.this, CategoriesActivity.class);
+                HomeActivity.this.startActivity(myIntent);
+            }
+        });
+
+        explore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(HomeActivity.this, MapsActivity.class);
                 HomeActivity.this.startActivity(myIntent);
             }
         });

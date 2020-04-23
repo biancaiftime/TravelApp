@@ -1,7 +1,13 @@
 package com.example.proiecttandroid.Fragments;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,17 +22,30 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.example.proiecttandroid.Activities.TripsActivity;
 import com.example.proiecttandroid.Models.Trip;
 import com.example.proiecttandroid.R;
 import com.example.proiecttandroid.Repositories.TripRepository;
 import com.example.proiecttandroid.Repositories.TripRepositoryActionListener;
+import com.example.proiecttandroid.Services.AlarmReceiver;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.Context.ALARM_SERVICE;
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 public class AddTripFragment extends Fragment {
+
+    // Notification ID.
+    private static final int NOTIFICATION_ID = 0;
+    // Notification channel ID.
+    private static final String PRIMARY_CHANNEL_ID =
+            "primary_notification_channel";
+    private NotificationManager mNotificationManager;
 
     private TripRepository tripRepository;
 
@@ -102,15 +121,38 @@ public class AddTripFragment extends Fragment {
             }
         });
 
+        mNotificationManager = (NotificationManager)getActivity().getSystemService(NOTIFICATION_SERVICE);
+        Intent notifyIntent = new Intent(this.getActivity(), AlarmReceiver.class);
+        notifyIntent.putExtra("Title", "Your next trip to " + location.getText() + " is about to start! Have fun!");
+
+        final PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
+                (this.getActivity(), NOTIFICATION_ID, notifyIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+        final AlarmManager alarmManager = (AlarmManager)getActivity().getSystemService(ALARM_SERVICE);
+
         addTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Trip> trips = tripRepository.getAll(new TripRepositoryActionListener());
                 Trip trip = new Trip(location.getText().toString(), ParseTime(), Integer.parseInt(duration.getText().toString()),setReminder.isChecked());
                 tripRepository.insertTask(trip, new TripRepositoryActionListener());
+                ((TripsActivity)getActivity()).addItem(trip);
+                if (alarmManager != null) {
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                            ParseTime().getTime(), notifyPendingIntent);
+                    Toast.makeText(getActivity(), "An alarm to display notification for your trip to " +location.getText() +" was created!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                location.setText("");
+                duration.setText("");
+                time_view.setText("");
+                date_view.setText("");
+                setReminder.setChecked(false);
+
             }
         });
 
+        createNotificationChannel();
         return layout;
     }
 
@@ -131,5 +173,29 @@ public class AddTripFragment extends Fragment {
         calendar.set(Calendar.MINUTE, minutes);
         calendar.set(Calendar.SECOND, 0);
         return calendar.getTime();
+    }
+
+    public void createNotificationChannel() {
+
+        // Create a notification manager object.
+        mNotificationManager =
+                (NotificationManager)getActivity().getSystemService(NOTIFICATION_SERVICE);
+
+        // Notification channels are only available in OREO and higher.
+        // So, add a check on SDK version.
+        if (android.os.Build.VERSION.SDK_INT >=
+                android.os.Build.VERSION_CODES.O) {
+
+            // Create the NotificationChannel with all the parameters.
+            NotificationChannel notificationChannel = new NotificationChannel
+                    (PRIMARY_CHANNEL_ID,
+                            "To dos notifications",
+                            NotificationManager.IMPORTANCE_HIGH);
+
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            mNotificationManager.createNotificationChannel(notificationChannel);
+        }
     }
 }
