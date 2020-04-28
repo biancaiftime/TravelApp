@@ -122,18 +122,20 @@ public class AddTripFragment extends Fragment {
         });
 
         mNotificationManager = (NotificationManager)getActivity().getSystemService(NOTIFICATION_SERVICE);
-        Intent notifyIntent = new Intent(this.getActivity(), AlarmReceiver.class);
-        notifyIntent.putExtra("Title", "Your next trip to " + location.getText() + " is about to start! Have fun!");
 
-        final PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
-                (this.getActivity(), NOTIFICATION_ID, notifyIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
 
         final AlarmManager alarmManager = (AlarmManager)getActivity().getSystemService(ALARM_SERVICE);
 
         addTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent notifyIntent = new Intent(v.getContext(), AlarmReceiver.class);
+                notifyIntent.putExtra("Title", "Your next trip to " + location.getText() + " is about to start! Have fun!");
+
+                final PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
+                        (v.getContext(), NOTIFICATION_ID, notifyIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+
                 Trip trip = new Trip(location.getText().toString(), ParseTime(), Integer.parseInt(duration.getText().toString()),setReminder.isChecked());
                 tripRepository.insertTask(trip, new TripRepositoryActionListener());
                 ((TripsActivity)getActivity()).addItem(trip);
